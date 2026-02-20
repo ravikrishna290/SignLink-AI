@@ -84,11 +84,14 @@ Navigate to `http://localhost:3000` to access the application.
 
 ## 🎨 Screenshots & UI
 
-*(Insert your hero images and platform screenshots here)*
+### Home Page
+![Home Page](./hands2.png)
 
-- **Home Page**: `./hands2.png` *(or equivalent screenshot)*
-- **About Us**: `./about_us.png`
-- **Guides**: `./how_it_works.png`
+### About Us
+![About Us](./about_us.png)
+
+### Guides
+![Guides](./how_it_works.png)
 
 ---
 *Built to make the world more accessible.*
