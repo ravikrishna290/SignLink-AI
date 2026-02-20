@@ -29,9 +29,23 @@ SignLink AI bridges the communication gap by translating Indian Sign Language (I
 5. **Real-Time Display**: Displays the final translated text directly on the user's screen in real-time.
 
 ## 🏗️ Architecture Diagram
-*(Please insert architecture diagram image here)*
- 
-![Architecture Diagram Placeholder](./architecture_diagram.png)
+
+```mermaid
+graph TD;
+    A[Web/Mobile Camera Stream] -->|Client-Side| B(Google MediaPipe Hand Tracker)
+    B -->|Extracts| C[42 3D Landmark Coordinates]
+    C -->|API POST Request| D[FastAPI Backend Server]
+    D -->|Inference| E{TensorFlow / Keras ANN Model}
+    
+    subgraph Local Inference Pipeline
+    D
+    E
+    end
+    
+    E -->|Predicts| F[ISL Letter / Word]
+    F -->|JSON Response| G[Frontend UI]
+    G -->|Updates| H[Translated Text Display]
+```
 
 ## 💻 Technology Stack
 
