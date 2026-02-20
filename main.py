@@ -1,0 +1,48 @@
+from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
+import base64
+import numpy as np
+import cv2
+import tempfile
+import os
+
+from utils import extract_landmarks
+from predictor import predict_category
+
+app = FastAPI()
+
+@app.post("/api/predict/{category}")
+async def predict(category: str, image: UploadFile = File(...)):
+    try:
+        # Read the image bytes
+        contents = await image.read()
+        
+        # Convert to numpy array and decode to OpenCV format
+        nparr = np.frombuffer(contents, np.uint8)
+        frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        if frame is None:
+            return JSONResponse({"error": "Failed to decode image"}, status_code=400)
+
+        # Unconditionally mirror the physical camera feed to match training data
+        frame = cv2.flip(frame, 1)
+
+        landmarks, _ = extract_landmarks(frame)
+
+        if landmarks is None:
+            return {"prediction": "Waiting for input..."}
+        
+        print(f"[{category}] Landmarks sample: {landmarks[:5]}")
+        
+        prediction = predict_category(landmarks, category)
+        print(f"[{category}] Final prediction: {prediction}")
+
+        return {"prediction": prediction}
+        
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+# Mount the current directory strictly for static files
+# since our HTML accesses styles.css and converse.html directly.
+app.mount("/", StaticFiles(directory=".", html=True), name="static")
