@@ -4,9 +4,9 @@ import tensorflow as tf
 from pathlib import Path
 
 # ==============================
-# BASE MODEL DIRECTORY (pointing to deepblueISL models)
+# BASE MODEL DIRECTORY (pointing to local models folder)
 # ==============================
-BASE_DIR = Path(r"D:\ISL PROJECT\Deepblue ISL final\models")
+BASE_DIR = Path("models")
 
 # Cache loaded models to avoid reloading
 _models_cache = {}

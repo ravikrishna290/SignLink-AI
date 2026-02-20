@@ -9,8 +9,18 @@ import os
 
 from utils import extract_landmarks
 from predictor import predict_category
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Allow CORS for your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (change to your Vercel URL later for tighter security)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 @app.post("/api/predict/{category}")
 async def predict(category: str, image: UploadFile = File(...)):
