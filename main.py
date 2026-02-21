@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 import base64
 import numpy as np
 import cv2
@@ -51,8 +51,15 @@ async def predict(category: str, image: UploadFile = File(...)):
         return {"prediction": prediction}
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return JSONResponse({"error": str(e)}, status_code=500)
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(content=b"", media_type="image/x-icon")
 
 # Mount the current directory strictly for static files
 # since our HTML accesses styles.css and converse.html directly.
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
+
