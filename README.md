@@ -18,6 +18,7 @@ SignLink AI bridges the communication gap by translating Indian Sign Language (I
 - **⚡ Real-Time Speed (0ms Network Latency)**: By leveraging highly optimized localized inference, translations happen instantaneously directly on your device. Zero frames are sent to the cloud.
 - **🧠 42 Point Landmarks**: Utilizes advanced Google MediaPipe integration to map and track 42 high-fidelity 3D structural coordinates across both hands simultaneously.
 - **🔒 100% Private & Secure**: No video ever leaves your computer or mobile device.
+- **🤖 Integrated AI Chatbot**: An embedded intelligent healthcare assistant that can provide instant guidance, symptoms checking, and health suggestions via a custom RAG (Retrieval-Augmented Generation) pipeline using Mistral AI and FAISS.
 - **🌐 Zero Installation**: The platform functions entirely within modern web browsers, achieving inclusive scale without demanding software downloads.
 
 ## ⚙️ Working Mechanism
@@ -47,6 +48,19 @@ graph TD;
     G -->|Updates| H[Translated Text Display]
 ```
 
+## 🤖 Chatbot Architecture Diagram
+
+```mermaid
+graph TD;
+    U[User Query] -->|POST /api/chat| API[FastAPI Server]
+    API --> ST[Sentence Transformers]
+    ST -->|Query Embedding| F[(FAISS Vector Store)]
+    F -->|Retrieves Top K| C[Healthcare Context]
+    C --> P[Prompt Construction]
+    P --> M{Mistral Large API}
+    M -->|Generated Answer| UI[Frontend Chat Window]
+```
+
 ## 💻 Technology Stack
 
 - **Frontend Core**: HTML5, Vanilla JavaScript, CSS3 (Modern Glassmorphism & Animations)
@@ -63,24 +77,32 @@ To run the platform locally on your own machine:
 Ensure you have Python 3.8+ installed.
 
 ```bash
-pip install fastapi uvicorn mediapipe opencv-python tensorflow numpy joblib python-multipart
+pip install -r requirements.txt
 ```
 
 ### 2. File Structure Requirement
 Ensure you have the required trained `.h5` model and `.pkl` scaler files inside your `models/` directory for the predictor to load successfully.
 
-### 3. Run the Backend API
-Start the FastAPI server which serves the local translation inference:
+### 3. Run the Application
+Start the FastAPI server which serves both the API and the static frontend files:
 ```bash
 uvicorn main:app --reload --port 8000
 ```
+Navigate to `http://localhost:8000` to access the application.
 
-### 4. Launch the Frontend
-Open `index.html` directly in your web browser, or serve the directory using a lightweight web server:
+## 🚀 Deployment
+
+The project is fully configured for cloud deployment. Due to the large size of Machine Learning dependencies (TensorFlow, MediaPipe), standard serverless platforms like Vercel are not recommended. We have configured the project for native Docker and Render deployments.
+
+### Option 1: Render (Recommended)
+The repository contains a `render.yaml` file. You can instantly deploy the project by connecting this repository to [Render](https://render.com/) and creating a new **Blueprint**. Render will automatically detect the configuration and deploy the FastAPI app.
+
+### Option 2: Docker
+Use the included `Dockerfile` to build and deploy anywhere:
 ```bash
-python -m http.server 3000
+docker build -t signlink-ai .
+docker run -d -p 8000:8000 signlink-ai
 ```
-Navigate to `http://localhost:3000` to access the application.
 
 ## 🎨 Screenshots & UI
 

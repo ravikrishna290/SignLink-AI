@@ -59,7 +59,20 @@ async def predict(category: str, image: UploadFile = File(...)):
 async def favicon():
     return Response(content=b"", media_type="image/x-icon")
 
+from chatbot_api import get_chatbot_response, ChatRequest
+
+@app.post("/api/chat")
+async def chat_endpoint(req: ChatRequest):
+    try:
+        response = get_chatbot_response(req.message)
+        return {"response": response}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JSONResponse({"error": str(e)}, status_code=500)
+
 # Mount the current directory strictly for static files
 # since our HTML accesses styles.css and converse.html directly.
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
+
 
