@@ -106,14 +106,10 @@ docker run -d -p 8000:8000 signlink-ai
 
 ## 🎨 Screenshots & UI
 
-### Home Page
-![Home Page](./hands2.png)
+### Working Website
 
-### About Us
-![About Us](./about_us.png)
-
-### Guides
-![Guides](./how_it_works.png)
+![Home Page](./screenshot_home.png)
+![Converse Page](./screenshot_converse.png)
 
 ---
 *Built to make the world more accessible.*
